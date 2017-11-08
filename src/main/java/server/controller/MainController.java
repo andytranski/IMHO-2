@@ -25,7 +25,7 @@ public class MainController {
     }
 
     // Logic behind authorizing user
-    public User authUser(User user) {
+    public String authUser(User user) {
         DbManager dbManager = new DbManager();
         String token = null;
         //Use username to get the time created
@@ -51,7 +51,7 @@ public class MainController {
                 e.printStackTrace();
             }
             if (token != null) {
-                return authorizedUser;
+                return token;
             } else {
                 return null;
             }
