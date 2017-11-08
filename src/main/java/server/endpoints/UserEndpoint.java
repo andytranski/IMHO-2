@@ -59,12 +59,12 @@ public class UserEndpoint {
     //Getting own profile by token
     public Response getMyUser(@HeaderParam("authorization") String token) throws SQLException {
         CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
-        String myUser = new Gson().toJson(currentUser.getCurrentUser());
-        myUser = crypter.encryptAndDecryptXor(myUser);
+        // String myUser = new Gson().toJson(currentUser.getCurrentUser());
+        // myUser = crypter.encryptAndDecryptXor(myUser);
 
         if (currentUser.getCurrentUser() != null) {
             Globals.log.writeLog(this.getClass().getName(), this, "My user loaded", 2);
-            return Response.status(200).type("application/json").entity(new Gson().toJson(myUser)).build();
+            return Response.status(200).type("application/json").entity(new Gson().toJson(currentUser)).build();
         } else {
             Globals.log.writeLog(this.getClass().getName(), this, "Unauthorized - my user", 2);
             return Response.status(400).type("text/plain").entity("Error loading user").build();
