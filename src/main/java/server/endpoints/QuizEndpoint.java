@@ -32,7 +32,7 @@ public class QuizEndpoint {
         if (currentUser.getCurrentUser() != null) {
             ArrayList<Quiz> quizzes = quizController.loadQuizzes(courseId);
             String loadedQuizzes = new Gson().toJson(quizzes);
-            loadedQuizzes = crypter.encryptAndDecryptXor(loadedQuizzes);
+            //loadedQuizzes = crypter.encryptAndDecryptXor(loadedQuizzes);
 
             if (quizzes != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Quizzes loaded", 2);
@@ -55,7 +55,7 @@ public class QuizEndpoint {
         if (currentUser.getCurrentUser() != null && currentUser.isAdmin()) {
             Quiz quizCreated = quizController.createQuiz(new Gson().fromJson(quiz, Quiz.class));
             String newQuiz = new Gson().toJson(quizCreated);
-            newQuiz = crypter.encryptAndDecryptXor(newQuiz);
+            //newQuiz = crypter.encryptAndDecryptXor(newQuiz);
 
             if (quizCreated != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Quiz created", 2);

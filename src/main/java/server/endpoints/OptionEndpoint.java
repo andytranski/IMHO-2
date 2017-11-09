@@ -34,7 +34,7 @@ public class OptionEndpoint {
             //New arraylist of Option objects. Gives arraylist the value of the options loaded in loadOptions (dbmanager)
             ArrayList options = quizController.loadOptions(questionId);
             String loadedOptions = new Gson().toJson(options);
-            loadedOptions = crypter.encryptAndDecryptXor(loadedOptions);
+            //loadedOptions = crypter.encryptAndDecryptXor(loadedOptions);
 
             if (options != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Options loaded", 2);
@@ -57,7 +57,7 @@ public class OptionEndpoint {
         if (currentUser.getCurrentUser() != null && currentUser.isAdmin()) {
             Option optionCreated = quizController.createOption(new Gson().fromJson(option, Option.class));
             String newOption = new Gson().toJson(optionCreated);
-            newOption = crypter.encryptAndDecryptXor(newOption);
+            //newOption = crypter.encryptAndDecryptXor(newOption);
 
             if (optionCreated != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Option created", 2);

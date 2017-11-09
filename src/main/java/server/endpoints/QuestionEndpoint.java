@@ -30,7 +30,7 @@ public class QuestionEndpoint {
         if (currentUser.getCurrentUser() != null) {
             ArrayList<Question> questions = quizController.loadQuestions(quizId);
             String loadedQuestions = new Gson().toJson(questions);
-            loadedQuestions = crypter.encryptAndDecryptXor(loadedQuestions);
+            //loadedQuestions = crypter.encryptAndDecryptXor(loadedQuestions);
 
             if (questions != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Questions loaded", 2);
@@ -53,7 +53,7 @@ public class QuestionEndpoint {
         if (currentUser.getCurrentUser() != null && currentUser.isAdmin()) {
             Question questionCreated = quizController.createQuestion(new Gson().fromJson(question, Question.class));
             String newQuestion = new Gson().toJson(questionCreated);
-            newQuestion = crypter.encryptAndDecryptXor(newQuestion);
+            //newQuestion = crypter.encryptAndDecryptXor(newQuestion);
 
             if (questionCreated != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Question created", 2);

@@ -27,7 +27,7 @@ public class CourseEndpoint {
         if (currentUser.getCurrentUser() != null) {
             ArrayList<Course> courses = quizController.loadCourses();
             String loadedCourses = new Gson().toJson(courses);
-            loadedCourses = crypter.encryptAndDecryptXor(loadedCourses);
+            //loadedCourses = crypter.encryptAndDecryptXor(loadedCourses);
 
             if (courses != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Courses loaded", 2);
