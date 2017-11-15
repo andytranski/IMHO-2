@@ -258,7 +258,8 @@ public class DbManager {
                 quiz.setQuizId(resultSet.getInt("quiz_id"));
                 quiz.setCreatedBy(resultSet.getString("created_by"));
                 quiz.setQuestionCount(resultSet.getInt("question_count"));
-                quiz.setQuizTitle(resultSet.getString("quiz_description"));
+                quiz.setQuizDescription(resultSet.getString("quiz_description"));
+                quiz.setQuizTitle(resultSet.getString("quiz_title"));
                 quiz.setCourseId(resultSet.getInt("course_id"));
                 quizzes.add(quiz);
             }

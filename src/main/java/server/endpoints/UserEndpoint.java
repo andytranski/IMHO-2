@@ -29,7 +29,6 @@ public class UserEndpoint {
 
         String authorizedToken = mainController.authUser(new Gson().fromJson(decryptedUser, User.class));
         String myToken = new Gson().toJson(authorizedToken);
-        System.out.println(myToken);
 
         if (myToken != null) {
             Globals.log.writeLog(this.getClass().getName(), this, "User authorized", 2);

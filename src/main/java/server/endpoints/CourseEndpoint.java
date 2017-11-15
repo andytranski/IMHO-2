@@ -22,16 +22,17 @@ public class CourseEndpoint {
 
     @GET
     public Response loadCourses(@HeaderParam("authorization") String token) throws SQLException {
+        token = new Gson().fromJson(token, String.class);
+
         CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
 
         if (currentUser.getCurrentUser() != null) {
             ArrayList<Course> courses = quizController.loadCourses();
             String loadedCourses = new Gson().toJson(courses);
-            //loadedCourses = crypter.encryptAndDecryptXor(loadedCourses);
 
             if (courses != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Courses loaded", 2);
-                return Response.status(200).type("application/json").entity(new Gson().toJson(loadedCourses)).build();
+                return Response.status(200).type("application/json").entity(crypter.encrypt(loadedCourses)).build();
             } else {
                 Globals.log.writeLog(this.getClass().getName(), this, "Empty course array loaded", 2);
                 return Response.status(204).type("text/plain").entity("No courses").build();
