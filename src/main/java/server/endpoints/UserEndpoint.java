@@ -82,9 +82,9 @@ public class UserEndpoint {
     public Response logOut(String userId) throws  SQLException {
         String myUserId = new Gson().fromJson(userId, String.class);
         String decryptedId = crypter.decrypt(myUserId);
-        System.out.println(decryptedId);
 
         Boolean deletedToken = tokenController.deleteToken(new Gson().fromJson(decryptedId, Integer.class));
+        System.out.println(deletedToken);
 
         if (deletedToken == true) {
             Globals.log.writeLog(this.getClass().getName(), this, "User log out", 2);

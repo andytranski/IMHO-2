@@ -53,6 +53,16 @@ public class QuizController {
         }
     }
 
+    public boolean updateQuestionCount(int quizId, int questionCount) {
+        DbManager dbManager = new DbManager();
+        Boolean updatedCount = dbManager.updateQuestionCount(quizId, questionCount);
+        if(updatedCount = true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     //Method for deleting a quiz and all it's sub-tables
     public Boolean deleteQuiz(int quizId) {
         DbManager dbManager = new DbManager();

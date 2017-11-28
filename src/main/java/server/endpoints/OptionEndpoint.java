@@ -28,17 +28,18 @@ public class OptionEndpoint {
     //Specifies path
     @Path("/{QuestionId}")
     public Response loadOptions(@HeaderParam("authorization") String token, @PathParam("QuestionId") int questionId) throws SQLException {
+        token = new Gson().fromJson(token, String.class);
+
         CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
 
         if (currentUser.getCurrentUser() != null) {
             //New arraylist of Option objects. Gives arraylist the value of the options loaded in loadOptions (dbmanager)
             ArrayList options = quizController.loadOptions(questionId);
             String loadedOptions = new Gson().toJson(options);
-            //loadedOptions = crypter.encryptAndDecryptXor(loadedOptions);
 
             if (options != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Options loaded", 2);
-                return Response.status(200).type("application/json").entity(new Gson().toJson(loadedOptions)).build();
+                return Response.status(200).type("application/json").entity(crypter.encrypt(loadedOptions)).build();
             } else {
                 Globals.log.writeLog(this.getClass().getName(), this, "Empty options array loaded", 2);
                 return Response.status(204).type("text/plain").entity("No options").build();
@@ -52,16 +53,19 @@ public class OptionEndpoint {
     @POST
     //Creating a new option for a quiz.
     public Response createOption(@HeaderParam("authorization") String token, String option) throws SQLException {
+        option = new Gson().fromJson(option, String.class);
+        String decryptedOption = crypter.decrypt(option);
+        System.out.println(decryptedOption);
+
         CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
 
         if (currentUser.getCurrentUser() != null && currentUser.isAdmin()) {
-            Option optionCreated = quizController.createOption(new Gson().fromJson(option, Option.class));
+            Option optionCreated = quizController.createOption(new Gson().fromJson(decryptedOption, Option.class));
             String newOption = new Gson().toJson(optionCreated);
-            //newOption = crypter.encryptAndDecryptXor(newOption);
 
             if (optionCreated != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Option created", 2);
-                return Response.status(200).type("application/json").entity(new Gson().toJson(newOption)).build();
+                return Response.status(200).type("application/json").entity(crypter.encrypt(newOption)).build();
             } else {
                 Globals.log.writeLog(this.getClass().getName(), this, "No input to new option", 2);
                 return Response.status(500).type("text/plain").entity("Failed creating option").build();

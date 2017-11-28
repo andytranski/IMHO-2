@@ -146,6 +146,24 @@ public class DbManager {
         return null;
     }
 
+    public boolean updateQuestionCount(int quizId, int questionCount) throws IllegalArgumentException {
+        try {
+            PreparedStatement updateQuiz = connection.prepareStatement("UPDATE Quiz SET question_count = ? WHERE quiz_id = ?");
+            updateQuiz.setInt(1, questionCount);
+            updateQuiz.setInt(2, quizId);
+
+            int rowsAffected = updateQuiz.executeUpdate();
+
+            if (rowsAffected == 1) {
+                return true;
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+    }
+
+
     // Method for creating a question
     public Question createQuestion(Question question) throws IllegalArgumentException {
         //Try-catch

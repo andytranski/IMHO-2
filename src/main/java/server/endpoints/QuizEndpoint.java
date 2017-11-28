@@ -34,7 +34,6 @@ public class QuizEndpoint {
         if (currentUser.getCurrentUser() != null) {
             ArrayList<Quiz> quizzes = quizController.loadQuizzes(courseId);
             String loadedQuizzes = new Gson().toJson(quizzes);
-            System.out.println(loadedQuizzes);
 
             if (quizzes != null) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Quizzes loaded", 2);
@@ -52,9 +51,8 @@ public class QuizEndpoint {
     @POST
     // Method for creating a quiz
     public Response createQuiz(@HeaderParam("authorization") String token, String quiz) throws SQLException {
-       quiz = new Gson().fromJson(quiz, String.class);
-       String decryptedQuiz = crypter.decrypt(quiz);
-        System.out.println(decryptedQuiz);
+        quiz = new Gson().fromJson(quiz, String.class);
+        String decryptedQuiz = crypter.decrypt(quiz);
 
         CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
 
@@ -75,18 +73,47 @@ public class QuizEndpoint {
         }
     }
 
+    @POST
+    @Path("/{QuizId}")
+    public Response updateQuestionCount(@HeaderParam("authorization") String token, @PathParam("QuizId") int quizId, String questionCount) throws SQLException {
+
+        String newQuestionCount = new Gson().fromJson(questionCount, String.class);
+        String decryptedQuestionCount = crypter.decrypt(newQuestionCount);
+
+        CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
+
+        if (currentUser.getCurrentUser() != null && currentUser.isAdmin()) {
+            Boolean updatedCount = quizController.updateQuestionCount(quizId, new Gson().fromJson(decryptedQuestionCount, Integer.class));
+
+            if (updatedCount == true) {
+                Globals.log.writeLog(this.getClass().getName(), this, "Quiz updated", 2);
+                return Response.status(200).type("text/plain").entity("Updated quiz").build();
+            } else {
+                Globals.log.writeLog(this.getClass().getName(), this, "Failed updating", 2);
+                return Response.status(400).type("text/plain").entity("Failed updating quiz").build();
+            }
+        } else {
+            Globals.log.writeLog(this.getClass().getName(), this, "Unauthorized - update quiz", 2);
+            return Response.status(401).type("text/plain").entity("Unauthorized").build();
+        }
+    }
+
 
     @DELETE
     @Path("{deleteId}")
     // Method for deleting a quiz and all it's sub-tables
     public Response deleteQuiz(@HeaderParam("authorization") String token, @PathParam("deleteId") int quizId) throws SQLException {
+        token = new Gson().fromJson(token, String.class);
+        System.out.println(quizId);
+
         CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
 
         if (currentUser.getCurrentUser() != null && currentUser.isAdmin()) {
             Boolean quizDeleted = quizController.deleteQuiz(quizId);
+            System.out.println(quizDeleted);
             if (quizDeleted = true) {
                 Globals.log.writeLog(this.getClass().getName(), this, "Quiz deleted", 2);
-                return Response.status(200).type("text/plain").entity("Quiz deleted").build();
+                return Response.status(200).type("text/plain").entity(crypter.encrypt("Quiz deleted")).build();
             } else {
                 Globals.log.writeLog(this.getClass().getName(), this, "Delete quiz attempt failed", 2);
                 return Response.status(400).type("text/plain").entity("Error deleting quiz").build();
