@@ -22,7 +22,10 @@ public class CourseEndpoint {
 
     @GET
     public Response loadCourses(@HeaderParam("authorization") String token) throws SQLException {
+        System.out.println(token);
         token = new Gson().fromJson(token, String.class);
+        String decryptedToken = crypter.decrypt(token);
+        System.out.println(decryptedToken);
 
         CurrentUserContext currentUser = tokenController.getUserFromTokens(token);
 

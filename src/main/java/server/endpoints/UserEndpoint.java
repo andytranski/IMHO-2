@@ -84,8 +84,6 @@ public class UserEndpoint {
         String decryptedId = crypter.decrypt(myUserId);
 
         Boolean deletedToken = tokenController.deleteToken(new Gson().fromJson(decryptedId, Integer.class));
-        System.out.println(deletedToken);
-
         if (deletedToken == true) {
             Globals.log.writeLog(this.getClass().getName(), this, "User log out", 2);
             return Response.status(200).entity("Logged out").build();
