@@ -70,6 +70,7 @@ public class QuizController {
         return ifDeleted;
     }
 
+    //Method for loading questions
     public ArrayList<Question> loadQuestions(int quizId) {
         DbManager dbManager = new DbManager();
         ArrayList<Question> question = dbManager.loadQuestions(quizId);
