@@ -11,6 +11,7 @@ public class Digester {
     }
     static {
         try {
+            //Digester set MD5 hashing
             digester = MessageDigest.getInstance("MD5");
         } catch (Exception e) {
             e.printStackTrace();
